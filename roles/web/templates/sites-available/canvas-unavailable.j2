@@ -1,0 +1,12 @@
+server {
+	listen 80;
+	listen 443 ssl spdy;
+	server_name {{ hostname }};
+	root /var/www/canvas-unavailable/;
+	ssl_certificate /etc/ssl/certs/canvas.pem;
+	ssl_certificate_key /etc/ssl/private/canvas.key;
+
+	location / {
+		return 503;
+	}
+}

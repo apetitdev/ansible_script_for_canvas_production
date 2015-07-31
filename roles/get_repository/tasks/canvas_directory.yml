@@ -1,0 +1,43 @@
+---
+- name: check if canvas is installed
+  stat: path=/var/canvas
+  register: canvas_installed
+  tags: canvas download
+
+- name: create canvas directories
+  sudo: yes
+  file: path={{ item }} state=directory
+  with_items:
+    - /var/canvas
+    - /var/canvas/{{ application }}
+    - /var/canvas/{{ application }}/shared
+    - /var/canvas/{{ application }}/shared/log
+    - /var/canvas/{{ application }}/releases
+    - /var/canvas/{{ application }}/shared/tmp/pids
+    - /var/canvas/{{ application }}/shared/public/assets
+    - /var/canvas/{{ application }}/shared/public/stylesheets/compiled
+    - /var/canvas/{{ application }}/shared/config
+  when: not canvas_installed.stat.exists
+  tags: canvas download
+
+- name: add id_rsa
+  sudo: yes
+  template: src=id_rsa.j2 dest=/root/.ssh/id_rsa mode=0600
+  tags: canvas download
+
+- name: git clone canvas
+  sudo: yes
+  git: repo=git@github.com:nucloudglobal/lms.git dest=/var/canvas/{{ application }}/releases/first key_file=~/.ssh/id_rsa force=yes accept_hostkey=yes
+  when: not canvas_installed.stat.exists
+  tags: canvas download
+
+- name: make the folder usable by deploy user
+  sudo: yes
+  command: sudo chown deploy:deploy -R /var/canvas/
+  tags: canvas download
+
+- name: create canvas files
+  file: path=/var/canvas/Gemfile.lock state=touch
+  #notify: restart apache service
+  when: not canvas_installed.stat.exists
+  tags: canvas download

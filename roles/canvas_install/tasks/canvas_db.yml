@@ -1,0 +1,6 @@
+---
+
+- name: configure canvas rdb
+  template: src=database.yml.j2 dest=/var/canvas/{{ application }}/shared/config/database.yml
+  notify: restart nginx service
+  tags: canvas

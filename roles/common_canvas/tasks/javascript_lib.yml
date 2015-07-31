@@ -1,0 +1,20 @@
+---
+
+- name: install javascript related packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest update_cache=yes cache_valid_time=3600
+  with_items:
+     - nodejs
+     - coffeescript
+  tags:
+    - canvas
+    - javascript
+
+
+# An exception is thrown when performing canvas npm install without symlink.
+- name: create symlink /usr/bin/nodejs to /usr/bin/node
+  sudo: yes
+  file: src=/usr/bin/nodejs dest=/usr/bin/node state=link
+  tags:
+    - canvas
+    - javascript

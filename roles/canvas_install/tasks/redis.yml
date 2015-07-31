@@ -1,0 +1,8 @@
+---
+
+- name: configure canvas redis
+  template: src=redis.yml.j2 dest=/var/canvas/{{ application }}/shared/config/redis.yml
+  notify:
+    - restart nginx service
+    - restart canvas_init service
+  tags: canvas

@@ -1,0 +1,86 @@
+---
+
+- name: Detect if rubies are installed
+  command: '{{ rvm1_rvm }} {{ item }} do true'
+  changed_when: False
+  failed_when: False
+  register: detect_rubies
+  with_items: rvm1_rubies
+  when: rvm1_rubies
+
+- name: Install rubies
+  command: '{{ rvm1_rvm }} install {{ ruby_version}}'
+  when: rvm1_rubies and item.rc != 0
+  with_items: detect_rubies.results
+  sudo_user: '{{ rvm1_user }}'
+
+- name: Detect default ruby version
+  command: '{{ rvm1_rvm }} alias list default'
+  changed_when: False
+  register: detect_default_ruby_version
+
+- name: Select default ruby
+  command: '{{ rvm1_rvm }} alias create default {{ rvm1_default_ruby_version }}'
+  when: detect_default_ruby_version.stdout == '' or
+        rvm1_default_ruby_version not in detect_default_ruby_version.stdout
+
+- name: change gem sources 1
+  shell: gem source -a https://ruby.taobao.org
+
+- name: change gem sources 2
+  shell: gem source -r https://rubygems.org/
+
+- name: Install bundler if not installed
+  shell: gem install bundler -v 1.7.10
+  ignore_errors: True
+
+- name: check if gem is installed
+  stat: "path=/home/{{ rvm1_user }}/.gems"
+  register: gem_file_here_installed
+  tags: canvas download
+
+- name: create canvas directories
+  sudo: yes
+  file: path={{ item }} state=directory
+  with_items:
+    - /home/{{ rvm1_user }}/.gems
+  when: not gem_file_here_installed.stat.exists
+
+- name: Create a new file where to store the gems 2
+  sudo: yes
+  command: "export GEM_HOME=/home/{{ rvm1_user }}/.gems"
+  sudo_user: '{{ rvm1_user }}'
+  when: not gem_file_here_installed.stat.exists
+
+- name: make the folder usable by deploy user
+  sudo: yes
+  command: sudo chown deploy:deploy -R /home/deploy/
+  tags: canvas download
+
+
+# - name: Symlink ruby related binaries on the system path
+#   sudo: yes
+#   file:
+#     state: 'link'
+#     src: '{{ rvm1_install_path }}/wrappers/default/{{ item }}'
+#     dest: '{{ rvm1_symlink_to }}/{{ item }} force=yes'
+#     owner: 'root'
+#     group: 'root'
+#   when: not '--user-install' in rvm1_install_flags
+#   with_items: rvm1_symlink_binaries
+#   ignore_errors: True
+
+# Not really usefull as we don't want to delete previous version of ruby, the .ruby-version file located in the root directoty of the git repository will handle the version required
+# - name: Detect if ruby version can be deleted
+#   sudo: yes
+#   command: '{{ rvm1_rvm }} {{ rvm1_delete_ruby }} do true'
+#   ignore_errors: True
+#   changed_when: False
+#   failed_when: False
+#   register: detect_delete_ruby
+#   when: rvm1_delete_ruby
+
+# # - name: Delete ruby version
+# #   command: '{{ rvm1_rvm }} remove {{ rvm1_delete_ruby }}'
+# #   changed_when: False
+# #   when: rvm1_delete_ruby and detect_delete_ruby.rc == 0

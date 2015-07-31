@@ -1,0 +1,6 @@
+---
+
+- name: configure canvas security
+  template: src=security.yml.j2 dest=/var/canvas/{{ application }}/shared/config/security.yml
+  notify: restart nginx service
+  tags: canvas

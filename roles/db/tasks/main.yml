@@ -1,0 +1,24 @@
+---
+# This is mainly for capistrano later since sudo is no longer available in v3
+- name: create sudoers file
+  sudo: yes
+  template: src=sudoers.j2 dest=/etc/sudoers.d/{{ user }}_dbservers validate='visudo -cf %s' owner=root group=root mode=0440
+
+- name: generate source file for postgres
+  sudo: yes
+  template: src=pgdg.list.j2 dest=/etc/apt/sources.list.d/pgdg.list owner=root
+
+- name: update apt-get 
+  sudo: yes
+  apt: update_cache=yes upgrade=safe force=yes
+
+- name: install postgresql libraries
+  sudo: yes
+  apt: name={{item}} state=present force=yes
+  with_items:
+  - postgresql-{{ postgres_version }}
+  - libpq-dev
+  - postgresql-contrib-{{ postgres_version }}
+  - python-psycopg2
+
+- include: postgresql.yml

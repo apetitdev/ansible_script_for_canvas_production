@@ -1,0 +1,6 @@
+---
+
+- name: configure canvas logging
+  template: src=logging.yml.j2 dest=/var/canvas/{{ application }}/shared/config/logging.yml
+  notify: restart nginx service
+  tags: canvas

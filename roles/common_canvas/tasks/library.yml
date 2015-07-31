@@ -1,0 +1,29 @@
+---
+
+- name: install general library packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest update_cache=yes cache_valid_time=3600
+  with_items:
+     - imagemagick
+     - libcurl4-gnutls-dev
+     - libpq5
+     - libpq-dev
+     - libxml2-dev
+     - libxmlsec1
+     - libxmlsec1-dev
+     - libxslt1-dev
+     - unzip
+     - zlib1g-dev
+  tags:
+    - canvas
+    - library
+
+- name: install python related packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest update_cache=yes cache_valid_time=3600
+  with_items:
+     - python
+     - python-software-properties
+  tags:
+    - canvas
+

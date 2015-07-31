@@ -1,0 +1,13 @@
+- include: amazones3.yml
+- include: cache_store.yml
+- include: canvas_db.yml
+- include: canvas_domain.yml
+- include: canvas_file_store.yml
+- include: canvas_logging.yml
+- include: out_going_email.yml
+- include: redis.yml
+- include: canvas_security.yml
+- include: canvas_session_store.yml
+- include: canvas_gem_and_bundler.yml
+- include: canvas_javascrpit_start.yml
+- include: start_canvas.yml

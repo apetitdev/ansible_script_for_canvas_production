@@ -1,0 +1,6 @@
+---
+
+- name: configure canvas cache store
+  template: src=cache_store.yml.j2 dest=/var/canvas/{{ application }}/shared/config/cache_store.yml
+  notify: restart nginx service
+  tags: canvas
