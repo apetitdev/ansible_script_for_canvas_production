@@ -1,6 +1,6 @@
 ---
 - name: Apply Common Configuration to node for canvas installation
   hosts: all
-  user: deploy
+  user: "{{ user }}"
   roles: 
     - common_canvas

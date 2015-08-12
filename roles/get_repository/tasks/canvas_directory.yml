@@ -4,20 +4,10 @@
   register: canvas_installed
   tags: canvas download
 
-- name: create canvas directories
+- name: check if canvas first app is installed
   sudo: yes
-  file: path={{ item }} state=directory
-  with_items:
-    - /var/canvas
-    - /var/canvas/{{ application }}
-    - /var/canvas/{{ application }}/shared
-    - /var/canvas/{{ application }}/shared/log
-    - /var/canvas/{{ application }}/releases
-    - /var/canvas/{{ application }}/shared/tmp/pids
-    - /var/canvas/{{ application }}/shared/public/assets
-    - /var/canvas/{{ application }}/shared/public/stylesheets/compiled
-    - /var/canvas/{{ application }}/shared/config
-  when: not canvas_installed.stat.exists
+  stat: path=/var/canvas/{{ application }}/releases/first
+  register: canvas_installed_first_version
   tags: canvas download
 
 - name: add id_rsa
@@ -27,8 +17,8 @@
 
 - name: git clone canvas
   sudo: yes
-  git: repo=git@github.com:nucloudglobal/lms.git dest=/var/canvas/{{ application }}/releases/first key_file=~/.ssh/id_rsa force=yes accept_hostkey=yes
-  when: not canvas_installed.stat.exists
+  git: "repo=git@github.com:nucloudglobal/lms.git dest=/var/canvas/{{ application }}/releases/first key_file=~/home/{{ user }}/ssh/id_rsa force=yes accept_hostkey=yes"
+  when: not canvas_installed_first_version.stat.exists
   tags: canvas download
 
 - name: make the folder usable by deploy user

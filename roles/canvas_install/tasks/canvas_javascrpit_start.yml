@@ -8,9 +8,10 @@
     - node_modules
 
 - name: install canvas node modules
-  command: chdir=/var/canvas/{{ application }}/releases/first npm install
+  command: "chdir=/var/canvas/{{ application }}/releases/first npm install"
   notify: restart nginx service
   when: not canvas_node_modules_installed.stat.exists
   tags:
     - canvas
     - node_modules
+  ignore_errors: True

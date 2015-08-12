@@ -25,13 +25,15 @@
         rvm1_default_ruby_version not in detect_default_ruby_version.stdout
 
 - name: change gem sources 1
-  shell: gem source -a https://ruby.taobao.org
+  shell: "sudo -iu {{ rbenv_user }} gem source -a https://ruby.taobao.org"
+  ignore_errors: True
 
 - name: change gem sources 2
-  shell: gem source -r https://rubygems.org/
+  shell: "sudo -iu {{ rbenv_user }} gem source -r https://rubygems.org/"
+  ignore_errors: True
 
 - name: Install bundler if not installed
-  shell: gem install bundler -v 1.7.10
+  shell: "sudo -iu {{ rbenv_user }} gem install bundler -v 1.7.10"
   ignore_errors: True
 
 - name: check if gem is installed

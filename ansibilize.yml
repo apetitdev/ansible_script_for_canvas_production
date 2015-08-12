@@ -1,9 +1,10 @@
 ---
 - include: common.yml
-- include: rvm.yml
+#- include: rvm.yml
 - include: dbservers.yml
 - include: common_canvas.yml
 - include: get_repository.yml
 - include: webservers.yml
 - include: appservers.yml
+- include: special_odoo.yml
 - include: canvas_install.yml

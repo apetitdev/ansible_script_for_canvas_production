@@ -1,0 +1,8 @@
+---
+- name: generate database.yml
+  template: src=database.yml.j2 dest=/home/{{ user }}/apps/{{ ecw_application }}/shared/config/database.yml owner={{ user }}
+
+- name: create a symlink
+  shell: "ln -s /var/canvas/{{ application }}/shared/config/database.yml /var/canvas/{{ application }}/releases/first/config/database.yml"
+  #when: not canvas_installed.stat.exists
+  tags: db

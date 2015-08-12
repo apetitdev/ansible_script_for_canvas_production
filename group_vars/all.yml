@@ -11,6 +11,7 @@ local_ssh_key: "{{ local_home }}/.ssh/id_rsa.pub"
 
 # User configuration
 user: deploy
+postgresql_database_for_ecw: "{{ company }}_{{ rails_env }}"
 # Uncomment the below lines to setup the user groups and password for the deploy user if needed.
 # user_group: sudo
 # user_password: NewPathway2015-2016!
@@ -20,7 +21,7 @@ shared_path: /var/canvas/{{ application }}/shared
 # Ruby
 ruby_url: http://cache.ruby-lang.org/pub/ruby/2.0/ruby-{{ ruby_version }}.tar.gz
 rbenv_user: "deploy"
-ruby_version: "1.9.3-p551"
+ruby_version: "2.0.0-195"
 
 # Monit
 monit_log: "{{ shared_path }}/log/monit.log"
@@ -50,7 +51,7 @@ unicorn_pid: "{{ current_path }}/tmp/pids/unicorn.pid"
 unicorn_config: "{{ shared_path }}/config/unicorn.rb"
 unicorn_log: "{{ shared_path }}/log/unicorn.log"
 unicorn_socket: /tmp/unicorn.{{ application }}.sock
-unicorn_workers: 
+unicorn_workers: 1current_path
 
 # RVM
 rvm1_temp_download_path: '/tmp'

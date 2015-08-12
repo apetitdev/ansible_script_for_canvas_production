@@ -10,7 +10,7 @@
 
 - name: update apt-get 
   sudo: yes
-  apt: update_cache=yes upgrade=safe force=yes
+  apt: update_cache=yes force=yes
 
 - name: install postgresql libraries
   sudo: yes

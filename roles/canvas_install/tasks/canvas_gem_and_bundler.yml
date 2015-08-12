@@ -1,7 +1,60 @@
 ---
 
+- name: create a symlink
+  shell: "ln -s /var/canvas/{{ application }}/shared/config/amazon_s3.yml /var/canvas/{{ application }}/releases/first/config/amazon_s3.yml"
+  tags: symlink
+
+- name: create a symlink
+  shell: "ln -s /var/canvas/{{ application }}/shared/config/cache_store.yml /var/canvas/{{ application }}/releases/first/config/cache_store.yml"
+  tags: symlink
+
+- name: create a symlink
+  shell: "ln -s /var/canvas/{{ application }}/shared/config/domain.yml /var/canvas/{{ application }}/releases/first/config/domain.yml"
+  tags: symlink
+
+- name: create a symlink
+  shell: "ln -s /var/canvas/{{ application }}/shared/config/file_store.yml /var/canvas/{{ application }}/releases/first/config/file_store.yml"
+  tags: symlink
+
+- name: create a symlink
+  shell: "ln -s /var/canvas/{{ application }}/shared/config/ooor.yml /var/canvas/{{ application }}/releases/first/config/ooor.yml"
+  tags: symlink
+
+- name: create a symlink
+  shell: "ln -s /var/canvas/{{ application }}/shared/config/logging.yml /var/canvas/{{ application }}/releases/first/config/logging.yml"
+  tags: symlink
+
+- name: create a symlink
+  shell: "ln -s /var/canvas/{{ application }}/shared/config/outgoing_mail.yml /var/canvas/{{ application }}/releases/first/config/outgoing_mail.yml"
+  tags: symlink
+
+- name: create a symlink
+  shell: "ln -s /var/canvas/{{ application }}/shared/config/redis.yml /var/canvas/{{ application }}/releases/first/config/redis.yml"
+  tags: symlink
+
+- name: create a symlink
+  shell: "ln -s /var/canvas/{{ application }}/shared/config/security.yml /var/canvas/{{ application }}/releases/first/config/security.yml"
+  tags: symlink
+
+- name: create a symlink
+  shell: "ln -s /var/canvas/{{ application }}/shared/config/session_store.yml /var/canvas/{{ application }}/releases/first/config/session_store.yml"
+  tags: symlink
+
+- name: create a symlink
+  shell: "ln -s /var/canvas/{{ application }}/shared/config/databse.yml /var/canvas/{{ application }}/releases/first/config/databse.yml"
+  tags: symlink
+
+- name: create a symlink
+  shell: "file=/var/canvas/{{ application }}/releases/first dest=/var/canvas/{{ application }}/current state=link force=yes"
+  #when: not canvas_installed.stat.exists
+  tags: symlink
+
+- name: create a symlink
+  shell: "ln -s /var/canvas/{{ application }}/releases/first /var/canvas/{{ application }}/current"
+  tags: symlink
+
 - name: check if canvas gems are installed
-  stat: path=/var/canvas/{{ application }}/vendor/bundle
+  stat: path=/var/canvas/{{ application }}/releases/first/vendor/bundle
   register: canvas_gems_installed
   tags:
     - canvas
@@ -19,18 +72,27 @@
 
 - name: install bundler gem
   sudo: yes
-  command: sudo gem install bundler --version=1.7.10
+  command: "chdir=/var/canvas/{{ application }}/releases/first gem install bundler --version=1.7.10"
   when: not canvas_gems_installed.stat.exists
   tags:
     - canvas
     - gems
   sudo_user: '{{ rvm1_user }}'
+  ignore_errors: True
 
 # `test` would be excluded, however it is needed to compile assets locally.
-- name: install canvas gems
-  command: chdir=/var/canvas/{{ application }}/releases/first bundle install --path vendor/bundle --without=sqlite mysql development ooor
-  notify: restart nginx service
+
+- name: bundle install
+  sudo_user: "{{ user }}"
+  command: "chdir=/var/canvas/{{ application }}/releases/first bundle install --path vendor/bundle --deployment"
+  notify: restart apache service
   when: not canvas_gems_installed.stat.exists
   tags:
     - canvas
     - gems
+  ignore_errors: True
+
+- name: remove id_rsa
+  sudo: yes
+  command: rm -rf dest=/root/.ssh/id_rsa
+  tags: canvas download

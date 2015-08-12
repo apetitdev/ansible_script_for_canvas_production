@@ -1,0 +1,3 @@
+- name: restart odoo service
+  sudo: yes
+  service: name=odoo state=restarted

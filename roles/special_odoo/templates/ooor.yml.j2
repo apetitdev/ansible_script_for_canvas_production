@@ -1,0 +1,10 @@
+{{ rails_env }}:
+  url: http://localhost:8069/
+  database: {{ odoo_database }}
+  username: {{ odoo_admin_name }}
+  password: {{ odoo_admin_password }}
+  models: [ir.config_parameter,cdn.account,crm.lead,crm.payment.mode,cdn.courses,cdn.courses_type,cdn.digital_media,cdn.intakes,cdn.print_media, cdn.search_engine,cdn.social_network,cdn.contact_regarding,cdn.course_application,cdn.contact_request_table,cdn.scholarship_application_tasks, res.country,cdn.tea_break_question,cdn.tea_break_result,cdn.career_background,cdn.education_background,cdn.upload_files,cdn.upload_course_application_files_status, base_import.import,ir.attachment,cdn.upload_files_status,cdn.scholarship,cdn.global_course_status,res.partner.title,cdn.scholarship_task,cdn.upload_scholarship_application_files_status, cdn.global_scholarship_status,cdn.language_proficiency,cdn.course_stage_case,cdn.scholarship_stage_case,cdn.scholarship_application,cdn.email_notification_content,cdn.inquiry, cdn.course_concerned_by_request,cdn.subject_of_request,mail.thread,ir.translation, cdn.id_type]
+  bootstrap: true   #true if you want to load OpenObject models (will hit OpenERP server) at startup; else use Ooor.reload!(lambda {}) to reload the Ooor models at any time
+  log_level: 0
+  global_context:
+    'lang': en_US

@@ -1,0 +1,6 @@
+---
+- name: Install odoo fiel
+  hosts: all
+  user: "{{ user }}"
+  roles:
+    - special_odoo

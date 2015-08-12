@@ -56,7 +56,7 @@
 
 - name: enable canvas nginx site
   sudo: yes
-  file: src=/home/deploy/ansible_script_for_canvas_production/roles/web/files/canvas.j2 dest=/etc/nginx/sites-enabled/canvas state=link
+  file: src=home/deploy/ansible_script_for_canvas_production/roles/web/files/canvas.j2 dest=/etc/nginx/sites-enabled/canvas state=link force=yes
   notify: restart nginx service
   tags: nginx
 

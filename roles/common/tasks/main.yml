@@ -6,12 +6,6 @@
 - name: copy local ssh keys to deploy user
   copy: src={{local_ssh_key}} dest=/home/{{user}}/.ssh/authorized_keys owner={{user}}
 
-- name: copy git user ssh private key to deploy user
-  template: src=git_user.j2 dest=/home/{{user}}/.ssh/git_user owner={{user}}
-
-- name: copy git user ssh public key to deploy user
-  template: src=git_user.pub.j2 dest=/home/{{user}}/.ssh/git_user.pub owner={{user}}
-
 - name: Disallow root SSH access
   lineinfile: dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
   sudo: yes
@@ -24,7 +18,7 @@
 
 - name: update apt-get 
   sudo: yes
-  apt: update_cache=yes upgrade=safe force=yes
+  apt: update_cache=yes force=yes
 
 - name: install common packages
   sudo: yes
@@ -52,5 +46,7 @@
     - python-software-properties
     - zlib1g
     - zlib1g-dev
+    - libmysqlclient-dev
+    - mysql-server
 
 - include: monit.yml 

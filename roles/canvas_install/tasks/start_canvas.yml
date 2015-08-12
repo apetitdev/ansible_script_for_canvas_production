@@ -1,13 +1,13 @@
 ---
 
 - name: compile canvas assets
-  shell: chdir=/var/canvas bundle exec rake canvas:compile_assets
+  shell: "chdir=/var/canvas/{{ application }}/releases/first bundle exec rake canvas:compile_assets"
   notify: restart nginx service
-  when: not canvas_installed.stat.exists
+  #when: not canvas_installed.stat.exists
   tags:
     - canvas
     - assets
-
+  ignore_errors: True
 
 - name: copy canvas_init script
   copy: src=etc/init.d/canvas_init dest=/etc/init.d/canvas_init owner=root group=root mode=755

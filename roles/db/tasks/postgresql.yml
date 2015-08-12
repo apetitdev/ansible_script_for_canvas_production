@@ -7,16 +7,16 @@
 
 - meta: flush_handlers # We need to run this handler so the auth methods are relaxed
 
-# - name: create postgres user
-#   postgresql_user: login_host=localhost name={{ user }} password={{ postgresql_password }} fail_on_user=yes state=present role_attr_flags=CREATEDB,SUPERUSER
+- name: create postgres user
+  postgresql_user: login_host=localhost name={{ user }} password={{ postgresql_password }} fail_on_user=yes state=present role_attr_flags=CREATEDB,SUPERUSER
 
-# - name: create 1st database for production
-#   sudo: yes
-#   postgresql_db: name={{ first_db_name }} owner={{ user }} state=present login_host=localhost
+- name: create 1st database for production
+  sudo: yes
+  postgresql_db: name={{ first_db_name }} owner={{ user }} state=present login_host=localhost
 
-# - name: reate 2nd database for production queue
-#   sudo: yes
-#   postgresql_db: name={{ second_db_name }} owner={{ user }} state=present login_host=localhost
+- name: reate 2nd database for production queue
+  sudo: yes
+  postgresql_db: name={{ second_db_name }} owner={{ user }} state=present login_host=localhost
 
 - name: create hstore extension
   command: psql -U postgres -c "create extension if not exists hstore;"

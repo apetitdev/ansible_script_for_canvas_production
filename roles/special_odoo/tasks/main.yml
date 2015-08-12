@@ -1,0 +1,9 @@
+---
+- name: generate ooor.yml
+  template: src=ooor.yml.j2 dest={{ shared_path }}/config/ooor.yml owner={{ user }}
+
+# - name: add odoo to repositories
+#   sudo: yes
+#   template: src=openerp-server.conf.j2 dest=/etc/odoo/openerp-server.conf owner=odoo mode=0640
+#   notify: restart odoo service
+#   tags: odoo

@@ -10,5 +10,6 @@ host    	all             	all             	127.0.0.1/32            	md5
 host    	all             	all             	::1/128                 	md5
 # Connections for remote servers
 {% for host in groups['rails'] %}
-host    	{{ application }} 	{{ user }} 			{{ host }}              	md5
+host    	{{ application }} 	{{ user }} 			{{ host }}              	255.255.255.255 md5
+host    	{{ ecw_application }} 	{{ user }} 			{{ host }}              	255.255.255.255 md5
 {% endfor %}
