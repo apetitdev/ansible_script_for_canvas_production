@@ -15,8 +15,10 @@ postgresql_database_for_ecw: "{{ company }}_{{ rails_env }}"
 # Uncomment the below lines to setup the user groups and password for the deploy user if needed.
 # user_group: sudo
 # user_password: NewPathway2015-2016!
-current_path: /var/canvas/{{ application }}/current
-shared_path: /var/canvas/{{ application }}/shared
+my_path: /home/deploy/canvas/{{ application }}
+release_path: /home/deploy/canvas/{{ application }}/releases
+current_path: /home/deploy/canvas/{{ application }}/current
+shared_path: /home/deploy/canvas/{{ application }}/shared
 
 # Ruby
 ruby_url: http://cache.ruby-lang.org/pub/ruby/2.0/ruby-{{ ruby_version }}.tar.gz

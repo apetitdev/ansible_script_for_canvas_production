@@ -1,6 +1,6 @@
 ---
 
 - name: configure canvas session store
-  template: src=session_store.yml.j2 dest=/var/canvas/{{ application }}/shared/config/session_store.yml
+  template: src=session_store.yml.j2 dest=/home/deploy/canvas/{{ application }}/shared/config/session_store.yml
   notify: restart nginx service
   tags: canvas

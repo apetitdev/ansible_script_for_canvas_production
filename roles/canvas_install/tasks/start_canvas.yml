@@ -1,13 +1,20 @@
 ---
 
 - name: compile canvas assets
-  shell: "chdir=/var/canvas/{{ application }}/releases/first bundle exec rake canvas:compile_assets"
+  shell: "chdir={{current_path}} bundle exec rake canvas:compile_assets"
   notify: restart nginx service
   #when: not canvas_installed.stat.exists
   tags:
     - canvas
     - assets
   ignore_errors: True
+
+
+- name: create require repos
+  shell: 'chdir={{current_path}} mkdir -p log tmp/pids public/assets public/stylesheets/compiled'
+
+- name: touch the lock
+  shell: 'chdir={{current_path}} touch Gemfile.lock'
 
 - name: copy canvas_init script
   copy: src=etc/init.d/canvas_init dest=/etc/init.d/canvas_init owner=root group=root mode=755
@@ -25,7 +32,7 @@
   tags: canvas
 
 - name: check if canvas qti is installed
-  stat: path=/var/canvas/{{ application }}/shared/vendor/QTIMigrationTool
+  stat: 'path={{ shared_path }}/vendor/QTIMigrationTool'
   register: canvas_qti_installed
   tags:
     - canvas
@@ -33,15 +40,15 @@
 
 - name: git clone qti
   git:
-    repo=https://github.com/instructure/QTIMigrationTool.git
-    dest=/var/canvas/{{ application }}/shared/vendor/QTIMigrationTool
+    'repo=https://github.com/instructure/QTIMigrationTool.git
+    dest={{ shared_path }}/vendor/QTIMigrationTool'
   when: not canvas_qti_installed.stat.exists
   tags:
     - canvas
     - qti
 
 - name: chmod canvas qti
-  command: chmod +x /var/canvas/{{ application }}/shared/vendor/QTIMigrationTool/migrate.py
+  command: 'chmod +x {{ shared_path }}/vendor/QTIMigrationTool/migrate.py'
   notify:
     - restart nginx service
     - restart canvas_init service
@@ -50,17 +57,23 @@
     - canvas
     - qti
 
-- name: secure /var/canvas 1
+- name: Detect canvasuser
+  stat: path=/home/canvasuser
+  register: canvasuser
+
+- name: secure /home/deploy/canvas 1
   sudo: yes
-  command: "chown www-data:www-data -R /var/canvas/{{ application }}"
+  command: "adduser --disabled-password --gecos canvas canvasuser "
+  when: not canvasuser.stat.exists
   tags: canvas
 
-- name: secure /var/canvas 2
+- name: secure /home/deploy/canvas 2
   sudo: yes
-  command: "chmod 0700 -R /var/canvas/{{ application }}"
+  command: "chown canvasuser /home/deploy/canvas/{{ application }}/shared/config/*.yml"
   tags: canvas
 
-- name: secure /var/canvas/config
-  shell: "chmod 400 /var/canvas/{{ application }}/shared/config/*.yml"
+- name: secure /home/deploy/canvas/config
+  sudo: yes
+  shell: "chmod 400 /home/deploy/canvas/{{ application }}/shared/config/*.yml"
   tags: canvas
   ignore_errors: True

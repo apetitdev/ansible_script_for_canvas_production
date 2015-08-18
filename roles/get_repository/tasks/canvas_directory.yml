@@ -1,12 +1,12 @@
 ---
 - name: check if canvas is installed
-  stat: path=/var/canvas
+  stat: path=/home/deploy/canvas
   register: canvas_installed
   tags: canvas download
 
 - name: check if canvas first app is installed
   sudo: yes
-  stat: path=/var/canvas/{{ application }}/releases/first
+  stat: 'path={{ my_path }}/releases/first'
   register: canvas_installed_first_version
   tags: canvas download
 
@@ -17,17 +17,18 @@
 
 - name: git clone canvas
   sudo: yes
-  git: "repo=git@github.com:nucloudglobal/lms.git dest=/var/canvas/{{ application }}/releases/first key_file=~/home/{{ user }}/ssh/id_rsa force=yes accept_hostkey=yes"
+  #git: "repo=git@github.com:instructure/canvas-lms.git dest=/home/deploy/canvas/{{ application }}/releases/first key_file=~/home/{{ user }}/ssh/id_rsa force=yes accept_hostkey=yes"
+  git: "repo=git@github.com:nucloudglobal/lms.git dest=/home/deploy/canvas/{{ application }}/releases/first key_file=~/home/{{ user }}/ssh/id_rsa force=yes accept_hostkey=yes"
   when: not canvas_installed_first_version.stat.exists
   tags: canvas download
 
 - name: make the folder usable by deploy user
   sudo: yes
-  command: sudo chown deploy:deploy -R /var/canvas/
+  command: sudo chown deploy:deploy -R /home/deploy/canvas/
   tags: canvas download
 
 - name: create canvas files
-  file: path=/var/canvas/Gemfile.lock state=touch
+  file: path={{ my_path }}/releases/first/Gemfile.lock state=touch
   #notify: restart apache service
   when: not canvas_installed.stat.exists
   tags: canvas download

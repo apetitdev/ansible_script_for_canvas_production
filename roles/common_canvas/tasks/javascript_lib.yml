@@ -6,6 +6,7 @@
   with_items:
      - nodejs
      - coffeescript
+     - npm
   tags:
     - canvas
     - javascript

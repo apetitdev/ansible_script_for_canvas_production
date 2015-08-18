@@ -1,60 +1,65 @@
 ---
 
-- name: create a symlink
-  shell: "ln -s /var/canvas/{{ application }}/shared/config/amazon_s3.yml /var/canvas/{{ application }}/releases/first/config/amazon_s3.yml"
+- name: create a symlink amazon
+  shell: "ln -s {{ shared_path }}/config/amazon_s3.yml {{ release_path }}/first/config/amazon_s3.yml"
   tags: symlink
 
-- name: create a symlink
-  shell: "ln -s /var/canvas/{{ application }}/shared/config/cache_store.yml /var/canvas/{{ application }}/releases/first/config/cache_store.yml"
+- name: create a symlink cache store
+  shell: "ln -s {{ shared_path }}/config/cache_store.yml {{ release_path }}/first/config/cache_store.yml"
   tags: symlink
 
-- name: create a symlink
-  shell: "ln -s /var/canvas/{{ application }}/shared/config/domain.yml /var/canvas/{{ application }}/releases/first/config/domain.yml"
+- name: create a symlink domain
+  shell: "ln -s {{ shared_path }}/config/domain.yml {{ release_path }}/first/config/domain.yml"
   tags: symlink
 
-- name: create a symlink
-  shell: "ln -s /var/canvas/{{ application }}/shared/config/file_store.yml /var/canvas/{{ application }}/releases/first/config/file_store.yml"
+- name: create a symlink file_store
+  shell: "ln -s {{ shared_path }}/config/file_store.yml {{ release_path }}/first/config/file_store.yml"
   tags: symlink
 
-- name: create a symlink
-  shell: "ln -s /var/canvas/{{ application }}/shared/config/ooor.yml /var/canvas/{{ application }}/releases/first/config/ooor.yml"
+- name: create a symlink ooor
+  shell: "ln -s {{ shared_path }}/config/ooor.yml {{ release_path }}/first/config/ooor.yml"
   tags: symlink
 
-- name: create a symlink
-  shell: "ln -s /var/canvas/{{ application }}/shared/config/logging.yml /var/canvas/{{ application }}/releases/first/config/logging.yml"
+- name: create a symlink logging
+  shell: "ln -s {{ shared_path }}/config/logging.yml {{ release_path }}/first/config/logging.yml"
   tags: symlink
 
-- name: create a symlink
-  shell: "ln -s /var/canvas/{{ application }}/shared/config/outgoing_mail.yml /var/canvas/{{ application }}/releases/first/config/outgoing_mail.yml"
+- name: create a symlink outgoing email
+  shell: "ln -s {{ shared_path }}/config/outgoing_mail.yml {{ release_path }}/first/config/outgoing_mail.yml"
   tags: symlink
 
-- name: create a symlink
-  shell: "ln -s /var/canvas/{{ application }}/shared/config/redis.yml /var/canvas/{{ application }}/releases/first/config/redis.yml"
+- name: create a symlink redis
+  shell: "ln -s {{ shared_path }}/config/redis.yml {{ release_path }}/first/config/redis.yml"
   tags: symlink
 
-- name: create a symlink
-  shell: "ln -s /var/canvas/{{ application }}/shared/config/security.yml /var/canvas/{{ application }}/releases/first/config/security.yml"
+- name: create a symlink security
+  shell: "ln -s {{ shared_path }}/config/security.yml {{ release_path }}/first/config/security.yml"
   tags: symlink
 
-- name: create a symlink
-  shell: "ln -s /var/canvas/{{ application }}/shared/config/session_store.yml /var/canvas/{{ application }}/releases/first/config/session_store.yml"
+- name: create a symlink session_store
+  shell: "ln -s {{ shared_path }}/config/session_store.yml {{ release_path }}/first/config/session_store.yml"
   tags: symlink
 
-- name: create a symlink
-  shell: "ln -s /var/canvas/{{ application }}/shared/config/databse.yml /var/canvas/{{ application }}/releases/first/config/databse.yml"
+- name: create a symlink database
+  shell: "ln -s {{ shared_path }}/config/database.yml {{ release_path }}/first/config/database.yml"
   tags: symlink
 
-- name: create a symlink
-  shell: "file=/var/canvas/{{ application }}/releases/first dest=/var/canvas/{{ application }}/current state=link force=yes"
+- name: create delayed job symlink
+  shell: "ln -s {{ shared_path }}/config/delayed_jobs.yml {{ release_path }}/first/config/delayed_jobs.yml"
+  tags: symlink
+
+- name: create a symlink current
+  shell: "ln -s {{ release_path }}/first /home/deploy/canvas/{{ application }}/current"
   #when: not canvas_installed.stat.exists
   tags: symlink
 
-- name: create a symlink
-  shell: "ln -s /var/canvas/{{ application }}/releases/first /var/canvas/{{ application }}/current"
+- name: create a symlink environment file
+  shell: "ln -s {{ shared_path }}/.env /home/deploy/canvas/{{ application }}/current/.env"
+  #when: not canvas_installed.stat.exists
   tags: symlink
 
 - name: check if canvas gems are installed
-  stat: path=/var/canvas/{{ application }}/releases/first/vendor/bundle
+  stat: path={{ my_path }}/releases/first/vendor/bundle
   register: canvas_gems_installed
   tags:
     - canvas
@@ -62,17 +67,17 @@
 
 - name: make the folder usable by deploy user
   sudo: yes
-  command: sudo chown deploy:deploy -R /var/canvas/
+  command: sudo chown deploy:deploy -R /home/deploy/canvas/
   tags: canvas installation
 
 # - name: make the ruby folder readable for all users
 #   sudo: yes
-#   command: chmod 777 -R /var/lib/gems/2.1.0
+#   command: chmod 777 -R /home/deploy/lib/gems/2.1.0
 #   tags: canvas installation
 
 - name: install bundler gem
   sudo: yes
-  command: "chdir=/var/canvas/{{ application }}/releases/first gem install bundler --version=1.7.10"
+  command: "chdir={{ release_path }}/first gem install bundler --version=1.7.10"
   when: not canvas_gems_installed.stat.exists
   tags:
     - canvas
@@ -84,7 +89,7 @@
 
 - name: bundle install
   sudo_user: "{{ user }}"
-  command: "chdir=/var/canvas/{{ application }}/releases/first bundle install --path vendor/bundle --deployment"
+  command: "chdir={{ release_path }}/first bundle install --path vendor/bundle --deployment"
   notify: restart apache service
   when: not canvas_gems_installed.stat.exists
   tags:

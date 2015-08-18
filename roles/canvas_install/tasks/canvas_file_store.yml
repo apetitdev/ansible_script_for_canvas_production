@@ -1,6 +1,6 @@
 ---
 
 - name: configure canvas file store
-  template: src=file_store.yml.j2 dest=/var/canvas/{{ application }}/shared/config/file_store.yml
+  template: src=file_store.yml.j2 dest=/home/deploy/canvas/{{ application }}/shared/config/file_store.yml
   notify: restart nginx service
   tags: canvas

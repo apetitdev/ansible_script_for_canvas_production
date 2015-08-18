@@ -1,0 +1,2 @@
+- name: Create environment file
+  template: src=.env.j2 dest=/home/deploy/canvas/{{ application }}/shared/.env owner={{ user }}

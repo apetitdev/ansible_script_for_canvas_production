@@ -1,6 +1,6 @@
 ---
 - name: check if canvas is installed
-  stat: path=/var/canvas
+  stat: path=/home/deploy/canvas
   register: canvas_installed
   tags: canvas download
 
@@ -8,20 +8,20 @@
 # This is mainly for capistrano later since sudo is no longer available in v3
 - name: create sudoers file
   sudo: yes
-  template: src=sudoers.j2 dest=/etc/sudoers.d/{{ user }}_appservers validate='visudo -cf %s' owner=root group=root mode=0440
+  template: src=sudoers.j2 dest=/etc/sudoers.d/{{ user }}_appservers_lms validate='visudo -cf %s' owner=root group=root mode=0440
 
 - name: create canvas directories
   file: path={{ item }} state=directory
   with_items:
-    - /var/canvas
-    - /var/canvas/{{ application }}
-    - /var/canvas/{{ application }}/shared
-    - /var/canvas/{{ application }}/shared/log
-    - /var/canvas/{{ application }}/releases
-    - /var/canvas/{{ application }}/shared/tmp/pids
-    - /var/canvas/{{ application }}/shared/public/assets
-    - /var/canvas/{{ application }}/shared/public/stylesheets/compiled
-    - /var/canvas/{{ application }}/shared/config
+    - '/home/deploy/canvas'
+    - '{{ my_path }}'
+    - '{{ my_path }}/shared'
+    - '{{ my_path }}/shared/log'
+    - '{{ my_path }}/releases'
+    - '{{ my_path }}/shared/tmp/pids'
+    - '{{ my_path }}/shared/public/assets'
+    - '{{ my_path }}/shared/public/stylesheets/compiled'
+    - '{{ my_path }}/shared/config'
   tags: canvas download
 
 - include: unicorn.yml

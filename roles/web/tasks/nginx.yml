@@ -3,10 +3,73 @@
   apt: pkg=nginx state=latest update_cache=yes cache_valid_time=3600
   tags: nginx
 
+# Add the passenger repo to the available list of repo for ubuntu
+- name: configure nginx
+  sudo: yes
+  template: src=passenger.list.j2 dest=/etc/apt/sources.list.d/passenger.list
+  notify: restart nginx service
+  tags: passenger
+
+- name: install key for passenger
+  sudo: yes
+  command: sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
+  tags: passenger
+
+- name: isntall the require repositories for passenger
+  sudo: yes
+  apt: pkg={{item}} state=present force=yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+  tags: passenger
+
+- name: update apt-get 
+  sudo: yes
+  apt: update_cache=yes force=yes
+
+- name: install extra packages
+  sudo: yes
+  apt: pkg={{item}} state=present force=yes
+  with_items:
+    - nginx-extras
+    - passenger
+    - ruby-dev
+  tags: passenger
+
+- name: Create the include directory for passenger
+  sudo: yes
+  file: path=/etc/nginx/include.d state=directory owner=root
+  tags: passenger
+
+- name: configure nginx
+  sudo: yes
+  template: src=passenger.conf.j2 dest=/etc/nginx/include.d/passenger.conf
+  notify: restart nginx service
+  tags: passenger
+
+- name: create ssl folder
+  sudo: yes
+  file: path=/etc/nginx/ssl state=directory owner=root
+
+# - name: install passenger module for nginx
+#   sudo: yes
+#   command: sudo passenger-install-nginx-module
+#   tags: passenger
+
+# - name: check passenger installation 1
+#   sudo: yes
+#   command: passenger-config validate-install
+#   tags: passenger
+
+# - name: check passenger installation 2
+#   sudo: yes
+#   command: passenger-memory-stats
+#   tags: passenger
+
 # Assumes wildcard SSL if file store is `local`.
 - name: copy canvas ssl public key
   sudo: yes
-  copy: src=server.crt.j2 dest=/etc/ssl/server.crt owner=root group=root mode=644
+  copy: src=server.crt.j2 dest=/etc/nginx/ssl/server.crt owner=root group=root mode=644
   notify: restart nginx service
   tags:
     - nginx
@@ -15,7 +78,7 @@
 # Assumes wildcard SSL if file store is 'local'.
 - name: copy canvas ssl private key
   sudo: yes
-  copy: src=server.key.j2 dest=/etc/ssl/server.key owner=root group=root mode=640
+  copy: src=server.key.j2 dest=/etc/nginx/ssl/server.key owner=root group=root mode=640
   notify: restart nginx service
   tags:
     - nginx

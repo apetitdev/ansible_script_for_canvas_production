@@ -1,6 +1,6 @@
 ---
 
 - name: configure canvas outgoing mail
-  template: src=outgoing_mail.yml.j2 dest=/var/canvas/{{ application }}/shared/config/outgoing_mail.yml
+  template: src=outgoing_mail.yml.j2 dest=/home/deploy/canvas/{{ application }}/shared/config/outgoing_mail.yml
   notify: restart nginx service
   tags: canvas

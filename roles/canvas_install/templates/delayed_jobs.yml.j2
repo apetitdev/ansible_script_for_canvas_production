@@ -1,0 +1,11 @@
+{{ rails_env }}:
+  workers:
+  - queue: {{ second_db_name }}
+    workers: 2
+    max_priority: 5
+  - queue: {{ second_db_name }}
+    workers: 3
+
+default:
+  workers:
+  - queue: {{ second_db_name }}
