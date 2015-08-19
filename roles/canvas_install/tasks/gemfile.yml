@@ -1,0 +1,10 @@
+---
+
+- name: configure gemfile
+  template: src=Gemfile.j2 dest={{ shared_path }}/Gemfile
+  notify: restart nginx service
+  tags: canvas
+
+- name: create a symlink ooor
+  shell: "ln -s {{ shared_path }}/Gemfile {{ release_path }}/first/Gemfile"
+  tags: symlink

@@ -95,7 +95,9 @@
   file: path={{ item }} state=absent
   with_items:
     - /etc/nginx/sites-enabled/default
+    - /etc/nginx/sites-enabled/default.conf
     - /etc/nginx/sites-available/default
+    - /etc/nginx/sites-available/default.conf
   notify: restart nginx service
   tags: nginx
 
@@ -107,7 +109,7 @@
 
 - name: configure canvas nginx site
   sudo: yes
-  template: src=sites-available/canvas.j2 dest=/etc/nginx/sites-available/canvas
+  template: src=sites-available/canvas.j2 dest=/etc/nginx/sites-available/canvas.conf
   notify: restart nginx service
   tags: nginx
 
@@ -119,7 +121,7 @@
 
 - name: enable canvas nginx site
   sudo: yes
-  file: src=home/deploy/ansible_script_for_canvas_production/roles/web/files/canvas.j2 dest=/etc/nginx/sites-enabled/canvas state=link force=yes
+  command: ln -s /etc/nginx/sites-available/canvas.conf /etc/nginx/sites-enabled/canvas.conf
   notify: restart nginx service
   tags: nginx
 

@@ -1,2 +1,7 @@
 - name: Create environment file
   template: src=.env.j2 dest=/home/deploy/canvas/{{ application }}/shared/.env owner={{ user }}
+
+- name: create a symlink environment file
+  shell: "ln -s {{ shared_path }}/.env {{ release_path }}/first/.env"
+  #when: not canvas_installed.stat.exists
+  tags: symlink

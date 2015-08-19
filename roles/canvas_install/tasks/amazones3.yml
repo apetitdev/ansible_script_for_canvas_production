@@ -4,3 +4,7 @@
   template: src=amazon_s3.yml.j2 dest=/home/deploy/canvas/{{ application }}/shared/config/amazon_s3.yml
   notify: restart nginx service
   tags: canvas
+
+- name: create a symlink amazon
+  shell: "ln -s {{ shared_path }}/config/amazon_s3.yml {{ release_path }}/first/config/amazon_s3.yml"
+  tags: symlink

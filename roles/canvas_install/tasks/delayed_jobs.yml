@@ -4,3 +4,7 @@
   template: src=delayed_jobs.yml.j2 dest=/home/deploy/canvas/{{ application }}/shared/config/delayed_jobs.yml
   notify: restart nginx service
   tags: canvas
+
+- name: create delayed job symlink
+  shell: "ln -s {{ shared_path }}/config/delayed_jobs.yml {{ release_path }}/first/config/delayed_jobs.yml"
+  tags: symlink

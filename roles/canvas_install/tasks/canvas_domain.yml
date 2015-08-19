@@ -4,3 +4,7 @@
   template: src=domain.yml.j2 dest=/home/deploy/canvas/{{ application }}/shared/config/domain.yml
   notify: restart nginx service
   tags: canvas
+
+- name: create a symlink domain
+  shell: "ln -s {{ shared_path }}/config/domain.yml {{ release_path }}/first/config/domain.yml"
+  tags: symlink

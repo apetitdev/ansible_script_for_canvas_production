@@ -6,3 +6,7 @@
     - restart nginx service
     - restart canvas_init service
   tags: canvas
+
+- name: create a symlink redis
+  shell: "ln -s {{ shared_path }}/config/redis.yml {{ release_path }}/first/config/redis.yml"
+  tags: symlink

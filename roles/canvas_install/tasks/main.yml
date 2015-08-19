@@ -8,6 +8,7 @@
 - include: redis.yml
 - include: delayed_jobs.yml
 - include: canvas_security.yml
+- include: gemfile.yml
 - include: canvas_session_store.yml
 - include: canvas_gem_and_bundler.yml
 - include: canvas_javascrpit_start.yml

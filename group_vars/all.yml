@@ -23,7 +23,7 @@ shared_path: /home/deploy/canvas/{{ application }}/shared
 # Ruby
 ruby_url: http://cache.ruby-lang.org/pub/ruby/2.0/ruby-{{ ruby_version }}.tar.gz
 rbenv_user: "deploy"
-ruby_version: "2.0.0-195"
+ruby_version: "2.1.6"
 
 # Monit
 monit_log: "{{ shared_path }}/log/monit.log"
@@ -53,7 +53,7 @@ unicorn_pid: "{{ current_path }}/tmp/pids/unicorn.pid"
 unicorn_config: "{{ shared_path }}/config/unicorn.rb"
 unicorn_log: "{{ shared_path }}/log/unicorn.log"
 unicorn_socket: /tmp/unicorn.{{ application }}.sock
-unicorn_workers: 1current_path
+unicorn_workers: 1
 
 # RVM
 rvm1_temp_download_path: '/tmp'
@@ -80,7 +80,7 @@ rvm1_ruby_install_flags: '--auto-dotfiles'
 rvm1_install_path: '/home/deploy/.rvm'
 rvm1_rvm_latest_installer: 'https://raw.githubusercontent.com/wayneeseguin/rvm/master/binscripts/rvm-installer'
 rvm1_rubies:
-  - 'ruby-2.0.0-p195'
+  - 'ruby-2.1.6'
 rvm1_gpg_keys: 'D39DC0E3'
 rvm1_gpg_key_server: 'hkp://keys.gnupg.net'
 rvm1_autolib_mode: 3

@@ -4,3 +4,7 @@
   template: src=logging.yml.j2 dest=/home/deploy/canvas/{{ application }}/shared/config/logging.yml
   notify: restart nginx service
   tags: canvas
+
+- name: create a symlink logging
+  shell: "ln -s {{ shared_path }}/config/logging.yml {{ release_path }}/first/config/logging.yml"
+  tags: symlink
