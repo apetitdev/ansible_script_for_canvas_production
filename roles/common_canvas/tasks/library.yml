@@ -2,7 +2,7 @@
 
 - name: install general library packages
   sudo: yes
-  apt: pkg={{ item }} state=latest update_cache=yes cache_valid_time=3600
+  apt: pkg={{ item }} state=latest update_cache=yes cache_valid_time=3600 force=yes
   with_items:
      - imagemagick
      - libcurl4-gnutls-dev

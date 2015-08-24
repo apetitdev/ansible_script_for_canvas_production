@@ -24,4 +24,15 @@
     - '{{ my_path }}/shared/config'
   tags: canvas download
 
+#This assume that you already have rbenv install
+- name: "Install {{ ruby_version }}"
+  command: "sudo -iu {{ rbenv_user }} rbenv install {{ ruby_version }}"
+  tags: rbenv
+  ignore_errors: True
+
+- name: "Install the bundler"
+  command: 'RBENV_ROOT=~/.rbenv RBENV_VERSION={{ ruby_version }} ~/.rbenv/bin/rbenv exec gem install bundler'
+  tags: set up bundler with the require ruby version
+  ignore_errors: True
+
 - include: unicorn.yml

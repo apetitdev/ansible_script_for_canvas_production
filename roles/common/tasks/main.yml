@@ -18,7 +18,7 @@
 
 - name: update apt-get 
   sudo: yes
-  apt: update_cache=yes force=yes
+  apt: update_cache=yes cache_valid_time=3600 # force=yes
 
 - name: install common packages
   sudo: yes
