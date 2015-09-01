@@ -2,10 +2,6 @@
 - name: generate ooor.yml
   template: src=ooor.yml.j2 dest={{ shared_path }}/config/ooor.yml owner={{ user }}
 
-- name: create a symlink ooor
-  shell: "ln -s {{ shared_path }}/config/ooor.yml {{ release_path }}/first/config/ooor.yml"
-  tags: symlink
-
 # - name: add odoo to repositories
 #   sudo: yes
 #   template: src=openerp-server.conf.j2 dest=/etc/odoo/openerp-server.conf owner=odoo mode=0640

@@ -12,6 +12,16 @@
     - canvas
     - gems
 
+- name: create the link to node_modules
+  command: "ln -s {{ my_path }}/shared/node_modules {{ release_path }}/first/node_modules"
+  tags:
+    - canvas
+    - gems
+
+- name: create a symlink ooor
+  shell: "ln -s {{ shared_path }}/config/ooor.yml {{ release_path }}/first/config/ooor.yml"
+  tags: symlink
+
 - name: make the folder usable by deploy user
   sudo: yes
   command: sudo chown deploy:deploy -R /home/deploy/canvas/

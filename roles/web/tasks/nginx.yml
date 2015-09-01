@@ -4,16 +4,16 @@
   tags: nginx
 
 # Add the passenger repo to the available list of repo for ubuntu
-- name: configure nginx
-  sudo: yes
-  template: src=passenger.list.j2 dest=/etc/apt/sources.list.d/passenger.list
-  notify: restart nginx service
-  tags: passenger
+# - name: configure nginx
+#   sudo: yes
+#   template: src=passenger.list.j2 dest=/etc/apt/sources.list.d/passenger.list
+#   notify: restart nginx service
+#   tags: passenger
 
-- name: install key for passenger
-  sudo: yes
-  command: sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
-  tags: passenger
+# - name: install key for passenger
+#   sudo: yes
+#   command: sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
+#   tags: passenger
 
 - name: isntall the require repositories for passenger
   sudo: yes
@@ -32,21 +32,21 @@
   apt: pkg={{item}} state=present force=yes
   with_items:
     - nginx-extras
-    - passenger
+    #- passenger
     - ruby-dev
   tags: passenger
   ignore_errors: True
 
-- name: Create the include directory for passenger
-  sudo: yes
-  file: path=/etc/nginx/include.d state=directory owner=root
-  tags: passenger
+# - name: Create the include directory for passenger
+#   sudo: yes
+#   file: path=/etc/nginx/include.d state=directory owner=root
+#   tags: passenger
 
-- name: configure nginx
-  sudo: yes
-  template: src=passenger.conf.j2 dest=/etc/nginx/include.d/passenger.conf
-  notify: restart nginx service
-  tags: passenger
+# - name: configure nginx
+#   sudo: yes
+#   template: src=passenger.conf.j2 dest=/etc/nginx/include.d/passenger.conf
+#   notify: restart nginx service
+#   tags: passenger
 
 - name: create ssl folder
   sudo: yes
@@ -125,6 +125,7 @@
   command: ln -s /etc/nginx/sites-available/canvas.conf /etc/nginx/sites-enabled/canvas.conf
   notify: restart nginx service
   tags: nginx
+  ignore_errors: True
 
 - name: create nginx monit file
   sudo: yes

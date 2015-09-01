@@ -8,7 +8,7 @@
 /test
 /dev
 /sqa
-/stating
+/staging
 /production
 /roles/common/templates/git_user.j2
 /roles/common/templates/git_user.pub.j2
