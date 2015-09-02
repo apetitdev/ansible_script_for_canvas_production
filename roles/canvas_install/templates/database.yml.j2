@@ -1,6 +1,6 @@
 default: &default
   adapter: postgresql
-  host: localhost
+  host: {{ ip_address }}
   encoding: utf8
   timeout: 5000
   username: {{ user }}
