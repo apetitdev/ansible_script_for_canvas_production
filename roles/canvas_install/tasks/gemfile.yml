@@ -8,3 +8,4 @@
 - name: create a symlink ooor
   shell: "ln -s {{ shared_path }}/Gemfile {{ release_path }}/first/Gemfile"
   tags: symlink
+  ignore_errors: True

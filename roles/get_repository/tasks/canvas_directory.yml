@@ -17,7 +17,7 @@
 
 - name: git clone canvas
   sudo: yes
-  #git: "repo=git@github.com:instructure/canvas-lms.git dest=/home/deploy/canvas/{{ application }}/releases/first key_file=~/home/{{ user }}/ssh/id_rsa force=yes accept_hostkey=yes"
+  # git: "repo=https://github.com/instructure/canvas-lms.git dest=/home/deploy/canvas/{{ application }}/releases/first key_file=~/home/{{ user }}/ssh/id_rsa force=yes accept_hostkey=yes"
   git: "repo=git@github.com:nucloudglobal/lms.git dest=/home/deploy/canvas/{{ application }}/releases/first key_file=~/home/{{ user }}/ssh/id_rsa force=yes accept_hostkey=yes"
   when: not canvas_installed_first_version.stat.exists
   tags: canvas download

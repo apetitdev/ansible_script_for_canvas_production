@@ -1,9 +1,9 @@
 {{ rails_env }}:
-  address: {{ emailserverhostname }}
-  port: {{ emailserverport }}
-  user_name: {{ emailuserusername }}
-  password: {{ emailuserpassword }}
-  authentication: {{ emailuserpassword }}
-  domain: {{ domain }}
-  outgoing_address: {{ emailuseraddress }}
-  default_name: {{ emailusername }}
+  address: "smtp.mandrillapp.com"
+  port: "587"
+  user_name: "{{ emailuserusername }}"
+  password: "{{ emailuserpassword }}"
+  authentication: "plain"
+  domain: "{{ domain }}"
+  outgoing_address: "{{ emailuserusername }}"
+  default_name: "Canvas Test"
